@@ -125,37 +125,38 @@ class Board:
         
         return bombs, flags, counts, visible
 
-    def show(self) -> None:
-        """Print the board to screen"""
-        row_spacer = "\n"
-        col_spacer = " "
-        bomb_string = "B"
-        blank_string = "_"
-        flag_string = "F"
-
+    def show(self, show_all: bool = False) -> None:
+        """Print the board to screen
+        Args
+            show_all: if True, ignore visibility flag and show the full board state
+        """
         row_views = []
         for row in range(self.num_rows):
             col_views = []
             for col in range(self.num_cols):
 
-                # Player knows the true state
-                if self.is_visible(row, col):
+                # Show the true state
+                if self.is_visible(row, col) or show_all:
                     if self.is_bomb(row, col):
-                        col_views.append(bomb_string)
+                        col_views.append(config.bomb_string)
                     
                     else:
-                        col_views.append(str(self.num_nearby_bombs(row, col)))
+                        nearby_bombs = self.num_nearby_bombs(row, col)
+                        if nearby_bombs > 0:
+                            col_views.append(str(nearby_bombs))
+                        else:
+                            col_views.append(config.zero_string)
 
-                # Player doesn't know the true state
+                # Don't show the true state
                 else:
                     if self.is_flag(row, col):
-                        col_views.append(flag_string)
+                        col_views.append(config.flag_string)
 
                     else:
-                        col_views.append(blank_string)
+                        col_views.append(config.blank_string)
             
-            row_views.append(col_spacer.join(col_views))
-        view = row_spacer.join(row_views)
+            row_views.append(config.col_spacer.join(col_views))
+        view = config.row_spacer.join(row_views)
 
         print(view)
             

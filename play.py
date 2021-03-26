@@ -12,7 +12,7 @@ def main():
     # print("\n\nCounts:")
     # print(counts)
 
-    game.board.show()
+    game.board.show(show_all=True)
 
 
 if __name__ == "__main__":
