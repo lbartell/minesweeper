@@ -1,64 +1,16 @@
-from enum import Enum, auto
-from typing import Union
-from dataclasses import dataclass
-
-from lib.config import config
+from lib.config import default_config, Configuration
 from lib.board import Board
-
-
-class UnknownMoveTypeError(TypeError):
-    """Unknown move type"""
-
-    pass
-
-
-class UnknownGameStatusError(ValueError):
-    """Unknown game status"""
-
-    pass
-
-
-class InvalidInputError(ValueError):
-    """Invalid user input"""
-
-    pass
-
-
-@dataclass
-class Location:
-    """Hold board location"""
-
-    row: int
-    col: int
-
-
-class MoveType(Enum):
-    """Options for type of game moves"""
-
-    TOGGLE_FLAG = "flag"
-    REVEAL = "click"
-
-
-@dataclass
-class Move:
-    """Hold user movement"""
-
-    type_: MoveType
-    location: Location
-
-
-class Status(Enum):
-    """Status of game"""
-
-    IN_PROGRESS = auto()
-    WIN = auto()
-    LOSS = auto()
+from lib.types import Move, MoveType, Location, Status
+from lib.errors import UnknownMoveTypeError, UnknownGameStatusError
 
 
 class Game:
-    def __init__(self):
+    """Control a game"""
+
+    def __init__(self, config: Configuration = default_config) -> None:
         """Setup new game"""
-        self.board = Board()
+        self.config = config
+        self.board = Board(self.config)
         self.status = Status.IN_PROGRESS
 
     def play(self) -> None:

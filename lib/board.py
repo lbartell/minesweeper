@@ -1,15 +1,16 @@
 from typing import Tuple, List
 import random
-import numpy as np
-from lib.config import config
-from lib.cell import Cell
+
+from lib.config import default_config, Configuration
+from lib.types import Cell
 
 
 class Board:
     """ Hold board state """
 
-    def __init__(self):
+    def __init__(self, config: Configuration = default_config):
         """Initialize board"""
+        self.config = config
         self.cells = self.create_empty_cells()
         self.setup_board()
 
@@ -21,12 +22,12 @@ class Board:
     @property
     def num_rows(self) -> int:
         """Number of rows on the board"""
-        return config.board_size
+        return self.config.board_size
 
     @property
     def num_cols(self) -> int:
         """Number of columns on the board"""
-        return config.board_size
+        return self.config.board_size
 
     @property
     def num_bombs(self) -> int:
@@ -40,7 +41,7 @@ class Board:
 
     def create_empty_cells(self) -> List[List[Cell]]:
         """Create an array of empty cells"""
-        return [[Cell() for _ in range(self.shape[1])] for _ in range(self.shape[0])]
+        return [[Cell() for _ in range(self.num_cols)] for _ in range(self.num_rows)]
 
     def is_bomb(self, row: int, col: int) -> bool:
         return self.cells[row][col].is_bomb
@@ -110,7 +111,7 @@ class Board:
 
     def create_bombs(self) -> None:
         """Create bombs on the board"""
-        while self.num_bombs < config.num_bombs:
+        while self.num_bombs < self.config.num_bombs:
             row = random.randrange(self.shape[0])
             col = random.randrange(self.shape[1])
             self.set_bomb(row, col)
@@ -136,28 +137,6 @@ class Board:
                     total += 1
 
         return total
-
-    def get_states(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """Return arrays of bombs, flags, counts, visibility for display"""
-        bombs = np.zeros(self.shape, dtype=int)
-        flags = np.zeros(self.shape, dtype=int)
-        counts = np.zeros(self.shape, dtype=int)
-        visible = np.zeros(self.shape, dtype=int)
-
-        for row in range(self.num_rows):
-            for col in range(self.num_cols):
-                if self.is_bomb(row, col):
-                    bombs[row, col] = 1
-
-                if self.is_flag(row, col):
-                    flags[row, col] = 1
-
-                counts[row, col] = self.num_bombs_nearby(row, col)
-
-                if self.is_visible(row, col):
-                    visible[row, col] = 1
-
-        return bombs, flags, counts, visible
 
     @property
     def all_visible_except_bombs(self) -> bool:
@@ -185,24 +164,24 @@ class Board:
                 # Show the true state
                 if self.is_visible(row, col) or show_all:
                     if self.is_bomb(row, col):
-                        col_views.append(config.bomb_string)
+                        col_views.append(self.config.bomb_string)
 
                     else:
                         nearby_bombs = self.num_bombs_nearby(row, col)
                         if nearby_bombs > 0:
                             col_views.append(str(nearby_bombs))
                         else:
-                            col_views.append(config.zero_string)
+                            col_views.append(self.config.zero_string)
 
                 # Don't show the true state
                 else:
                     if self.is_flag(row, col):
-                        col_views.append(config.flag_string)
+                        col_views.append(self.config.flag_string)
 
                     else:
-                        col_views.append(config.blank_string)
+                        col_views.append(self.config.blank_string)
 
-            row_views.append(config.col_spacer.join(col_views))
-        view = config.row_spacer.join(row_views)
+            row_views.append(self.config.col_spacer.join(col_views))
+        view = self.config.row_spacer.join(row_views)
 
         print(view)

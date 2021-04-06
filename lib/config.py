@@ -15,4 +15,4 @@ class Configuration:
     flag_string = "F"
 
 
-config = Configuration()
+default_config = Configuration()
