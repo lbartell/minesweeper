@@ -4,9 +4,10 @@ import numpy as np
 from lib.config import config
 from lib.cell import Cell
 
+
 class Board:
     """ Hold board state """
-    
+
     def __init__(self):
         """Initialize board"""
         self.cells = self.create_empty_cells()
@@ -16,17 +17,17 @@ class Board:
     def shape(self) -> Tuple[int, int]:
         """Board shape: rows, columns"""
         return self.num_rows, self.num_cols
-    
+
     @property
     def num_rows(self) -> int:
         """Number of rows on the board"""
         return config.board_size
-    
+
     @property
     def num_cols(self) -> int:
         """Number of columns on the board"""
         return config.board_size
-    
+
     @property
     def num_bombs(self) -> int:
         """Return number of bombs on the board"""
@@ -39,11 +40,8 @@ class Board:
 
     def create_empty_cells(self) -> List[List[Cell]]:
         """Create an array of empty cells"""
-        return [
-            [Cell() for _ in range(self.shape[1])]
-            for _ in range(self.shape[0])
-        ]
-    
+        return [[Cell() for _ in range(self.shape[1])] for _ in range(self.shape[0])]
+
     def is_bomb(self, row: int, col: int) -> bool:
         return self.cells[row][col].is_bomb
 
@@ -52,18 +50,54 @@ class Board:
 
     def is_visible(self, row: int, col: int) -> bool:
         return self.cells[row][col].is_visible
-    
-    def num_nearby_bombs(self, row: int, col: int) -> int:
+
+    def num_bombs_nearby(self, row: int, col: int) -> int:
         return self.cells[row][col].nearby_bombs
-    
+
     def set_bomb(self, row: int, col: int) -> None:
         """Set the specified cell as as a bomb"""
         self.cells[row][col].is_bomb = True
-    
+
     def reveal(self, row: int, col: int) -> None:
+        """Set the specified cell as visible, as well as all neighbors"""
+        if self.is_bomb(row, col):
+            self._reveal_single(row, col)
+            return
+
+        self._reveal_recursive(row, col)
+
+    def _reveal_recursive(self, row: int, col: int) -> None:
+        """Recursively reveal cells in the neighborhood"""
+        for delta in range(-1, 2):
+            for gamma in range(-1, 2):
+
+                r = row + delta
+                c = col + gamma
+
+                valid_location = (0 <= r < self.num_rows) and (0 <= c < self.num_cols)
+
+                if not valid_location:
+                    continue
+
+                if self.is_visible(r, c):
+                    continue
+
+                if self.is_bomb(r, c):
+                    continue
+
+                if self.num_bombs_nearby(r, c) == 0:
+                    self._reveal_single(r, c)
+                    self._reveal_recursive(r, c)
+                    continue
+
+                if self.num_bombs_nearby(r, c) > 0:
+                    self._reveal_single(r, c)
+                    continue
+
+    def _reveal_single(self, row: int, col: int) -> None:
         """Set the specified cell as visible"""
         self.cells[row][col].is_visible = True
-    
+
     def toggle_flag(self, row: int, col: int) -> None:
         """Toggle the flag on the specified cell"""
         current_state = self.cells[row][col].is_flagged
@@ -91,7 +125,7 @@ class Board:
     def count_num_bombs_nearby(self, row: int, col: int) -> int:
         """Count number of bombs near the specified cell"""
         min_row = max(row - 1, 0)
-        max_row = min(row + 1, self.num_rows- 1)
+        max_row = min(row + 1, self.num_rows - 1)
         min_col = max(col - 1, 0)
         max_col = min(col + 1, self.num_cols - 1)
 
@@ -100,7 +134,7 @@ class Board:
             for col in range(min_col, max_col + 1):
                 if self.is_bomb(row, col):
                     total += 1
-        
+
         return total
 
     def get_states(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -109,24 +143,37 @@ class Board:
         flags = np.zeros(self.shape, dtype=int)
         counts = np.zeros(self.shape, dtype=int)
         visible = np.zeros(self.shape, dtype=int)
-        
+
         for row in range(self.num_rows):
             for col in range(self.num_cols):
                 if self.is_bomb(row, col):
                     bombs[row, col] = 1
-                
+
                 if self.is_flag(row, col):
                     flags[row, col] = 1
-                
-                counts[row, col] = self.num_nearby_bombs(row, col)
+
+                counts[row, col] = self.num_bombs_nearby(row, col)
 
                 if self.is_visible(row, col):
                     visible[row, col] = 1
-        
+
         return bombs, flags, counts, visible
+
+    @property
+    def all_visible_except_bombs(self) -> bool:
+        """Return True if all cells are visible except bombs, False otherwise"""
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
+                if self.is_bomb(row, col):
+                    continue
+                if not self.is_visible(row, col):
+                    return False
+
+        return True
 
     def show(self, show_all: bool = False) -> None:
         """Print the board to screen
+
         Args
             show_all: if True, ignore visibility flag and show the full board state
         """
@@ -139,9 +186,9 @@ class Board:
                 if self.is_visible(row, col) or show_all:
                     if self.is_bomb(row, col):
                         col_views.append(config.bomb_string)
-                    
+
                     else:
-                        nearby_bombs = self.num_nearby_bombs(row, col)
+                        nearby_bombs = self.num_bombs_nearby(row, col)
                         if nearby_bombs > 0:
                             col_views.append(str(nearby_bombs))
                         else:
@@ -154,11 +201,8 @@ class Board:
 
                     else:
                         col_views.append(config.blank_string)
-            
+
             row_views.append(config.col_spacer.join(col_views))
         view = config.row_spacer.join(row_views)
 
         print(view)
-            
-
-

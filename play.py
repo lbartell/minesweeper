@@ -1,18 +1,9 @@
 from lib.game import Game
 
+
 def main():
     game = Game()
-
-    bombs, flags, counts, visible = game.board.get_states()
-
-    # print("\n\nBombs:")
-    # print(bombs)
-    # print("\n\nFlags:")
-    # print(flags)
-    # print("\n\nCounts:")
-    # print(counts)
-
-    game.board.show(show_all=True)
+    game.play()
 
 
 if __name__ == "__main__":
