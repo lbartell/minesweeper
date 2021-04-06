@@ -17,8 +17,10 @@ class UnknownGameStatusError(ValueError):
 
     pass
 
+
 class InvalidInputError(ValueError):
     """Invalid user input"""
+
     pass
 
 
@@ -79,11 +81,11 @@ class Game:
             # Get user input
             error_message = ""
             message = input(
-                "Enter move (flag or click) and location (row, col) "\
-                "e.g. \"click 2 3\"\n"\
+                "Enter move (flag or click) and location (row, col) "
+                'e.g. "click 2 3"\n'
                 ">>> "
             )
-            
+
             # Split into 3 parts
             parts = message.split()
             if len(parts) != 3:
@@ -93,30 +95,27 @@ class Game:
             move_str, row_str, col_str = parts
 
             # Get move type
-            try: 
+            try:
                 move_type = MoveType(move_str)
             except ValueError as err:
-                error_message += \
-                    f"Invalid move type, should be: "\
-                    f"{[t.value for t in MoveType]}\n"
+                error_message += (
+                    f"Invalid move type, should be: " f"{[t.value for t in MoveType]}\n"
+                )
 
             # get row and col
             try:
                 row = int(row_str)
                 col = int(col_str)
             except ValueError as err:
-                error_message += \
-                    f"Row and col must be integers.\n"
+                error_message += f"Row and col must be integers.\n"
                 print(error_message)
                 continue
 
             # make sure row and col are in range
             if not (0 <= row < self.board.num_rows):
-                error_message += \
-                    f"Row is out of range 0-{self.board.num_rows-1}\n"
+                error_message += f"Row is out of range 0-{self.board.num_rows-1}\n"
             if not (0 <= col < self.board.num_cols):
-                error_message += \
-                    f"Col is out of range 0,{self.board.num_cols-1}\n"
+                error_message += f"Col is out of range 0,{self.board.num_cols-1}\n"
             if error_message:
                 print(error_message)
 
