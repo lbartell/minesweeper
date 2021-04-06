@@ -1,10 +1,9 @@
+"""
+Play a game!
+"""
 from lib.game import Game
 
 
-def main():
+if __name__ == "__main__":
     game = Game()
     game.play()
-
-
-if __name__ == "__main__":
-    main()
