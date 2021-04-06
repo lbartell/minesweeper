@@ -12,7 +12,7 @@ source .venv/bin/activate
 ```
 
 # Play
-To play, within the venv run:
+To play:
 ```bash
 python play.py
 ```
