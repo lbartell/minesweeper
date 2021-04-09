@@ -1,5 +1,3 @@
-import sys
-
 from lib.config import default_config, Configuration
 from lib.board import Board
 from lib.types import Move, MoveType, Location, Status
