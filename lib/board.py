@@ -200,6 +200,7 @@ class Board:
         for row in range(self.num_rows):
             col_views = []
             for col in range(self.num_cols):
+
                 # Show the true state
                 if self.is_visible(row, col) or show_all:
                     if self.is_bomb(row, col):
