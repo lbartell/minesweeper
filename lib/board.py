@@ -150,6 +150,43 @@ class Board:
 
         return True
 
+
+    def get_top_outer_number_rows(self) -> List[str]:
+        """
+            returns top rows with column index
+            helpers. e.g.
+
+                                1 1 1 1 1 1 1 1 1 1
+            0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9
+            | | | | | | | | | | | | | | | | | | | |
+            v v v v v v v v v v v v v v v v v v v v
+        """
+        row_views = []
+
+        top_row = []
+        vert_line_row = ['|'] * self.num_cols
+        arrow_row = ['v'] * self.num_cols
+        space_row = [' '] * self.num_cols
+
+        if self.num_cols >= 10:
+            upper_top_row = []
+            for col in range(self.num_cols):
+                if col >= 10:
+                    upper_top_row.append(f"{int((col % 100 )/ 10)}")
+                else:
+                    upper_top_row.append(f" ")
+            row_views.append(self.config.col_spacer.join(upper_top_row))
+
+        for col in range(self.num_cols):
+            top_row.append(f"{col % 10}")
+
+        row_views.append(self.config.col_spacer.join(top_row))
+        row_views.append(self.config.col_spacer.join(vert_line_row))
+        row_views.append(self.config.col_spacer.join(arrow_row))
+        row_views.append(self.config.col_spacer.join(space_row))
+        return row_views
+
+
     def show(self, show_all: bool = False) -> None:
         """Print the board to screen
 
@@ -157,10 +194,12 @@ class Board:
             show_all: if True, ignore visibility flag and show the full board state
         """
         row_views = []
+        if self.config.show_outer_numbers:
+            row_views.extend(self.get_top_outer_number_rows())
+
         for row in range(self.num_rows):
             col_views = []
             for col in range(self.num_cols):
-
                 # Show the true state
                 if self.is_visible(row, col) or show_all:
                     if self.is_bomb(row, col):
@@ -180,6 +219,9 @@ class Board:
 
                     else:
                         col_views.append(self.config.blank_string)
+
+            if self.config.show_outer_numbers:
+                col_views.append(f" <--{row: <3}")
 
             row_views.append(self.config.col_spacer.join(col_views))
         view = self.config.row_spacer.join(row_views)
