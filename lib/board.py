@@ -151,7 +151,7 @@ class Board:
         return True
 
 
-    def get_top_outer_number_rows(self) -> List[str]:
+    def get_top_guide_rows(self) -> List[str]:
         """
             returns top rows with column index
             helpers. e.g.
@@ -195,7 +195,7 @@ class Board:
         """
         row_views = []
         if self.config.show_guide:
-            row_views.extend(self.get_top_outer_number_rows())
+            row_views.extend(self.get_top_guide_rows())
 
         for row in range(self.num_rows):
             col_views = []
