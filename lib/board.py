@@ -174,7 +174,7 @@ class Board:
                 if col >= 10:
                     upper_top_row.append(f"{int((col % 100 )/ 10)}")
                 else:
-                    upper_top_row.append(f" ")
+                    upper_top_row.append(" ")
             row_views.append(self.config.col_spacer.join(upper_top_row))
 
         for col in range(self.num_cols):
