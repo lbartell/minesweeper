@@ -29,12 +29,21 @@ def parse_args(args_list: List[str]) -> Configuration:
         dest="num_bombs",
     )
 
+    parser.add_argument(
+        "--outer-numbers",
+        help="Show column and row numbers around the board.",
+        action="store_true",
+        dest="show_outer_numbers",
+    )
+
     args = parser.parse_args(args_list)
-    return Configuration(board_size=args.board_size, num_bombs=args.num_bombs)
+    return Configuration(board_size=args.board_size,
+                         num_bombs=args.num_bombs,
+                         show_outer_numbers=args.show_outer_numbers)
 
 
 if __name__ == "__main__":
     config = parse_args(sys.argv[1:])
 
-    game = Game()
+    game = Game(config=config)
     game.play()
