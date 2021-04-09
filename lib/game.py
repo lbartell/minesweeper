@@ -43,9 +43,6 @@ class Game:
             # Split into 3 parts
             parts = message.split()
             if len(parts) != 3:
-                if len(parts) and parts[0] == "quit":
-                    sys.exit(0)
-
                 error_message += "Expected 3 parts\n"
                 print(error_message)
                 continue
