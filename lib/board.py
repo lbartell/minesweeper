@@ -151,18 +151,18 @@ class Board:
         return True
 
     def _get_top_guide_rows(self) -> List[str]:
-        """
-            Returns top rows with column index
-            helpers. e.g.
+        """ Returns top rows with column index helpers.
+
+        For example:
 
                                 1 1 1 1 1 1 1 1 1 1
             0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9
             | | | | | | | | | | | | | | | | | | | |
             v v v v v v v v v v v v v v v v v v v v
 
-            Note: Only displays up to 2 digits (for boards
-                  with a size above 100, only the values
-                  modulus 100 are displayed).
+        Note: Only displays up to 2 digits (for boards
+              with a size above 100, only the values
+              modulus 100 are displayed).
         """
         row_views = []
 
