@@ -150,7 +150,6 @@ class Board:
 
         return True
 
-
     def _get_top_guide_rows(self) -> List[str]:
         """
             Returns top rows with column index
@@ -189,7 +188,6 @@ class Board:
         row_views.append(self.config.col_spacer.join(arrow_row))
         row_views.append(self.config.col_spacer.join(space_row))
         return row_views
-
 
     def show(self, show_all: bool = False) -> None:
         """Print the board to screen
