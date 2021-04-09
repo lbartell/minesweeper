@@ -151,15 +151,19 @@ class Board:
         return True
 
 
-    def get_top_guide_rows(self) -> List[str]:
+    def _get_top_guide_rows(self) -> List[str]:
         """
-            returns top rows with column index
+            Returns top rows with column index
             helpers. e.g.
 
                                 1 1 1 1 1 1 1 1 1 1
             0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9
             | | | | | | | | | | | | | | | | | | | |
             v v v v v v v v v v v v v v v v v v v v
+
+            Note: Only displays up to 2 digits (for boards
+                  with a size abotve 100, only the values
+                  modulus 100 are displayed).
         """
         row_views = []
 
@@ -195,7 +199,7 @@ class Board:
         """
         row_views = []
         if self.config.show_guide:
-            row_views.extend(self.get_top_guide_rows())
+            row_views.extend(self._get_top_guide_rows())
 
         for row in range(self.num_rows):
             col_views = []
