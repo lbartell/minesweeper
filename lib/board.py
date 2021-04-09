@@ -168,11 +168,11 @@ class Board:
         arrow_row = ['v'] * self.num_cols
         space_row = [' '] * self.num_cols
 
-        if self.num_cols >= 10:
+        if self.num_cols > 10:
             upper_top_row = []
             for col in range(self.num_cols):
                 if col >= 10:
-                    upper_top_row.append(f"{int((col % 100 )/ 10)}")
+                    upper_top_row.append(f"{int((col % 100 ) / 10)}")
                 else:
                     upper_top_row.append(" ")
             row_views.append(self.config.col_spacer.join(upper_top_row))
