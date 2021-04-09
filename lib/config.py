@@ -8,7 +8,7 @@ class Configuration:
 
     board_size: int = DEFAULT_BOARD_SIZE
     num_bombs: int = DEFAULT_NUM_BOMBS
-    show_outer_numbers: bool = False
+    show_guide: bool = False
 
     row_spacer = "\n"
     col_spacer = " "

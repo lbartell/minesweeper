@@ -194,7 +194,7 @@ class Board:
             show_all: if True, ignore visibility flag and show the full board state
         """
         row_views = []
-        if self.config.show_outer_numbers:
+        if self.config.show_guide:
             row_views.extend(self.get_top_outer_number_rows())
 
         for row in range(self.num_rows):
@@ -220,7 +220,7 @@ class Board:
                     else:
                         col_views.append(self.config.blank_string)
 
-            if self.config.show_outer_numbers:
+            if self.config.show_guide:
                 col_views.append(f" <--{row: <3}")
 
             row_views.append(self.config.col_spacer.join(col_views))
