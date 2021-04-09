@@ -6,8 +6,9 @@ import sys
 from typing import List
 
 from lib.game import Game
-from lib.config import Configuration
-
+from lib.config import (Configuration,
+                        DEFAULT_BOARD_SIZE,
+                        DEFAULT_NUM_BOMBS)
 
 def parse_args(args_list: List[str]) -> Configuration:
     """Parse arguments"""
@@ -16,16 +17,18 @@ def parse_args(args_list: List[str]) -> Configuration:
     parser.add_argument(
         "--size",
         "-s",
-        help="Board side length, e.g. input 10 for a 10x10 board.",
+        help=f"Board side length, e.g. input 10 for a 10x10 board. (default {DEFAULT_BOARD_SIZE})",
         type=int,
+        default=DEFAULT_BOARD_SIZE,
         dest="board_size",
     )
 
     parser.add_argument(
         "--bombs",
         "-b",
-        help="Number of bombs to place on the board.",
+        help=f"Number of bombs to place on the board. (default {DEFAULT_NUM_BOMBS})",
         type=int,
+        default=DEFAULT_NUM_BOMBS,
         dest="num_bombs",
     )
 
@@ -37,6 +40,7 @@ def parse_args(args_list: List[str]) -> Configuration:
     )
 
     args = parser.parse_args(args_list)
+
     return Configuration(board_size=args.board_size,
                          num_bombs=args.num_bombs,
                          show_outer_numbers=args.show_outer_numbers)
