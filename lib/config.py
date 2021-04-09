@@ -6,6 +6,7 @@ class Configuration:
 
     board_size: int = 10
     num_bombs: int = 5
+    show_outer_numbers: bool = False
 
     row_spacer = "\n"
     col_spacer = " "
