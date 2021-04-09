@@ -162,7 +162,7 @@ class Board:
             v v v v v v v v v v v v v v v v v v v v
 
             Note: Only displays up to 2 digits (for boards
-                  with a size abotve 100, only the values
+                  with a size above 100, only the values
                   modulus 100 are displayed).
         """
         row_views = []
