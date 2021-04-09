@@ -151,7 +151,7 @@ class Board:
         return True
 
     def _get_top_guide_rows(self) -> List[str]:
-        """ Returns top rows with column index helpers.
+        """Returns top rows with column index helpers.
 
         For example:
 
